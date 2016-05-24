@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,6 +57,8 @@ import com.zd.vpn.util.TelInfoUtil;
 import com.zd.vpn.checker.CheckTerminalStatusPost;
 import com.zd.vpn.util.ToastUtils;
 
+
+
 /**
  * 入口
  */
@@ -85,7 +88,7 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
 
     private boolean isConnected = false;//是否已经连接VPN
 
-    private AlarmReceiver alarmReceiver = new AlarmReceiver();
+//    private AlarmReceiver alarmReceiver = new AlarmReceiver();
 
 
 
@@ -122,7 +125,31 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
     };
 
 
+    public static boolean bluetoothIsEnable()
+    {
+        return BluetoothAdapter.getDefaultAdapter().isEnabled();
+    }
 
+    public static void setBluetoothEnable(boolean paramBoolean)
+    {
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (paramBoolean)
+        {
+            adapter.enable();
+            return;
+        }
+        adapter.disable();
+    }
+
+    public static void setWifiEnable(Context paramContext, boolean paramBoolean)
+    {
+        ((WifiManager)paramContext.getSystemService(Context.WIFI_SERVICE)).setWifiEnabled(paramBoolean);
+    }
+
+    public static boolean wifiIsEnable(Context paramContext)
+    {
+        return ((WifiManager)paramContext.getSystemService(Context.WIFI_SERVICE)).isWifiEnabled();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,7 +190,9 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
         intent.setAction(OpenVPNService.START_SERVICE);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-        alarmReceiver.setAlarm(this);
+        setWifiEnable(this,false);
+        setBluetoothEnable(false);
+//        alarmReceiver.setAlarm(this);
     }
 
     @Override
@@ -457,7 +486,7 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
             register = false;
         }
         unbindService(mConnection);
-        alarmReceiver.cancelAlarm();
+//        alarmReceiver.cancelAlarm();
     }
 
     // 按两次退出

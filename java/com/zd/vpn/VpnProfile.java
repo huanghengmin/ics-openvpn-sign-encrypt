@@ -136,7 +136,8 @@ public class VpnProfile implements Serializable {
     public String mCustomRoutesv6 = "";
     public String mKeyPassword = "";
     public boolean mPersistTun = false;
-    public String mConnectRetryMax = "5";
+//    public String mConnectRetryMax = "5";
+    public String mConnectRetryMax = "-1";
     public String mConnectRetry = "5";
     public boolean mUserEditable = true;
     public String mAuth = "";
