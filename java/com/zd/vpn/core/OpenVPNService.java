@@ -22,6 +22,7 @@ import android.os.Handler.Callback;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,12 +42,15 @@ import com.zd.vpn.R;
 import com.zd.vpn.VpnProfile;
 import com.zd.vpn.activities.DisconnectVPN;
 import com.zd.vpn.activities.LogWindow;
+import com.zd.vpn.alarm.AlarmReceiver;
 import com.zd.vpn.core.VpnStatus.ByteCountListener;
 import com.zd.vpn.core.VpnStatus.ConnectionStatus;
 import com.zd.vpn.core.VpnStatus.StateListener;
+//import com.zd.vpn.receiver.BluetoothReceiver;
 import com.zd.vpn.receiver.BluetoothReceiver;
 import com.zd.vpn.receiver.SDReceiver;
 import com.zd.vpn.receiver.WifiReceiver;
+//import com.zd.vpn.receiver.WifiReceiver;
 
 import static com.zd.vpn.core.NetworkSpace.ipAddress;
 import static com.zd.vpn.core.VpnStatus.ConnectionStatus.LEVEL_CONNECTED;
@@ -84,6 +88,14 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     private String mLastTunCfg;
     private String mRemoteGW;
     private final Object mProcessLock = new Object();
+//    private AlarmReceiver alarmReceiver = new AlarmReceiver();
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+//        alarmReceiver.setAlarm(this);
+    }
 
     // From: http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
     public static String humanReadableByteCount(long bytes, boolean mbit) {
@@ -128,8 +140,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         VpnStatus.removeByteCountListener(this);
         unregisterDeviceStateReceiver();
         unregisterSdReceiver();
-        unregisterWifiReceiver();
-        unregisterBluetoothReceiver();
+       /* unregisterWifiReceiver();
+        unregisterBluetoothReceiver();*/
         ProfileManager.setConntectedVpnProfileDisconnected(this);
         if (!mStarting) {
             stopForeground(!mNotificationAlwaysVisible);
@@ -365,6 +377,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+
+
         if (intent != null && intent.getBooleanExtra(ALWAYS_SHOW_NOTIFICATION, false))
             mNotificationAlwaysVisible = true;
 
@@ -553,6 +567,8 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
             this.unregisterReceiver(bluetoothReceiver);
         // Just in case unregister for state
         VpnStatus.removeStateListener(this);
+
+//        alarmReceiver.cancelAlarm(this);
 
     }
 

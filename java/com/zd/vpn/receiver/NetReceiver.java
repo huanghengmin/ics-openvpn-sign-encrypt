@@ -28,7 +28,7 @@ import com.zd.vpn.util.TelInfoUtil;
 public class NetReceiver extends BroadcastReceiver implements VpnStatus.StateListener{
     private NotificationManager mNotificationManager;
     public static final int NOTIFICATION_ID = 2;
-    private boolean isConnected = false;
+    private boolean isConnected = true;
 
     private void sendNotification(String msg,Context context) {
         mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -154,13 +154,7 @@ public class NetReceiver extends BroadcastReceiver implements VpnStatus.StateLis
 
     @Override
     public void updateState(String state, String logmessage, int localizedResId, VpnStatus.ConnectionStatus level) {
-        if (level == VpnStatus.ConnectionStatus.LEVEL_CONNECTED) {
-            isConnected = true;
-        } else if (level == VpnStatus.ConnectionStatus.UNKNOWN_LEVEL || level == VpnStatus.ConnectionStatus.LEVEL_NOTCONNECTED) {
-            isConnected = false;
-        } else if (level == VpnStatus.ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT) {
-            isConnected = false;
-        } else {
+         if (level == VpnStatus.ConnectionStatus.UNKNOWN_LEVEL || level == VpnStatus.ConnectionStatus.LEVEL_NOTCONNECTED||level==VpnStatus.ConnectionStatus.LEVEL_NONETWORK) {
             isConnected = false;
         }
     }

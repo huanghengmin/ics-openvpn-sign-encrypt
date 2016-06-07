@@ -34,8 +34,6 @@ public class BasicSettingActivity extends Activity implements OnClickListener{
     private Button basicSettingsBackBut = null;
     private SharedPreferences shPreferences = null;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

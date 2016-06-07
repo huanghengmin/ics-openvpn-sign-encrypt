@@ -48,6 +48,7 @@ import com.zd.vpn.core.VpnStatus;
 import com.zd.vpn.checker.CheckStatusSignCRLValidity;
 import com.zd.vpn.receiver.BluetoothReceiver;
 import com.zd.vpn.receiver.WifiReceiver;
+import com.zd.vpn.service.StrategyService;
 import com.zd.vpn.util.APNManager;
 import com.zd.vpn.util.ConfigUtil;
 import com.zd.vpn.util.NetUtil;
@@ -125,7 +126,7 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
     };
 
 
-    public static boolean bluetoothIsEnable()
+    /*public static boolean bluetoothIsEnable()
     {
         return BluetoothAdapter.getDefaultAdapter().isEnabled();
     }
@@ -149,7 +150,7 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
     public static boolean wifiIsEnable(Context paramContext)
     {
         return ((WifiManager)paramContext.getSystemService(Context.WIFI_SERVICE)).isWifiEnabled();
-    }
+    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,15 +185,17 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
         }
         VpnStatus.addStateListener(this);
 
-
-
         Intent intent = new Intent(this, OpenVPNService.class);
         intent.setAction(OpenVPNService.START_SERVICE);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-        setWifiEnable(this,false);
-        setBluetoothEnable(false);
+//        setWifiEnable(this,false);
+//        setBluetoothEnable(false);
 //        alarmReceiver.setAlarm(this);
+
+        Intent service = new Intent(this, StrategyService.class);
+        startService(service);
+//        Log.i("TAG", "开机自启动策略更新服务.....");
     }
 
     @Override

@@ -8,31 +8,45 @@ package com.zd.vpn;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
+import com.zd.vpn.alarm.AlarmReceiver;
 import com.zd.vpn.core.ProfileManager;
+import com.zd.vpn.service.StrategyService;
 
 
 public class OnBootReceiver extends BroadcastReceiver {
-	// Debug: am broadcast -a android.intent.action.BOOT_COMPLETED
-	@Override
-	public void onReceive(Context context, Intent intent) {
+//    AlarmReceiver alarm = new AlarmReceiver();
+    // Debug: am broadcast -a android.intent.action.BOOT_COMPLETED
+    @Override
+    public void onReceive(Context context, Intent intent) {
 
-		final String action = intent.getAction();
+        final String action = intent.getAction();
 
-		if(Intent.ACTION_BOOT_COMPLETED.equals(action) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
-			VpnProfile bootProfile = ProfileManager.getLastConnectedProfile(context, true);
-			if (bootProfile != null) {
-				launchVPN(bootProfile, context);
-			}
+        if (Intent.ACTION_BOOT_COMPLETED.equals(action) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
+
+//            alarm.setAlarm(context);
+
+           /* Intent service = new Intent(context, StrategyService.class);
+            context.startService(service);
+            Log.i("TAG", "开机自启动策略更新服务.....");*/
+
+            VpnProfile bootProfile = ProfileManager.getLastConnectedProfile(context, true);
+            if (bootProfile != null) {
+                launchVPN(bootProfile, context);
+            }
         }
-	}
+    }
 
-	void launchVPN(VpnProfile profile, Context context) {
-		Intent startVpnIntent = new Intent(Intent.ACTION_MAIN);
-		startVpnIntent.setClass(context, LaunchVPN.class);
-		startVpnIntent.putExtra(LaunchVPN.EXTRA_KEY,profile.getUUIDString());
-		startVpnIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startVpnIntent.putExtra(LaunchVPN.EXTRA_HIDELOG, true);
+    void launchVPN(VpnProfile profile, Context context) {
+        Intent startVpnIntent = new Intent(Intent.ACTION_MAIN);
+        startVpnIntent.setClass(context, LaunchVPN.class);
+        startVpnIntent.putExtra(LaunchVPN.EXTRA_KEY, profile.getUUIDString());
+        startVpnIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startVpnIntent.putExtra(LaunchVPN.EXTRA_HIDELOG, true);
 
-		context.startActivity(startVpnIntent);
-	}
+        context.startActivity(startVpnIntent);
+    }
+
+
 }

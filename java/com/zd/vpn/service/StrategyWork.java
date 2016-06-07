@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import com.zd.vpn.checker.PropertiesUtils;
 import com.zd.vpn.receiver.BluetoothReceiver;
@@ -15,7 +16,8 @@ import com.zd.vpn.util.StrategyUtil;
 
 import java.util.TimerTask;
 
-class StrategyWork extends TimerTask {
+public class StrategyWork extends TimerTask {
+    private String TAG = "StrategyWork";
     private Context context;
 
     private WifiReceiver wifiReceiver = new WifiReceiver();
@@ -51,12 +53,12 @@ class StrategyWork extends TimerTask {
 
     @Override
     public void run() {
-
+        Log.i(TAG,"StrategyWork start working...... ");
         String save_path = context.getFilesDir().getAbsolutePath();
         SharedPreferences shPreferences = context.getSharedPreferences("com.zd.vpn", Context.MODE_PRIVATE);
         String ip = shPreferences.getString("vpn.ip", null);
         String strategyPort = shPreferences.getString("vpn.poliPort", null);
-        if (ip != null && strategyPort != null) {
+        if (ip != null&&ip.length()>0 && strategyPort != null&&strategyPort.length()>0) {
             String down_strategy_url = "http://" + ip + ":" + strategyPort + PropertiesUtils.DOWN_STRATEGY;
             //取出回应字串
             try {

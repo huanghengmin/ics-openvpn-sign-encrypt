@@ -112,28 +112,25 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
             networkStateChange(context);
         } else if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
             boolean screenOffPause = prefs.getBoolean("screenoff", false);
-
             if (screenOffPause) {
                 if (ProfileManager.getLastConnectedVpn()!=null &&  !ProfileManager.getLastConnectedVpn().mPersistTun)
                     VpnStatus.logError(R.string.screen_nopersistenttun);
 
-                screen = connectState.PENDINGDISCONNECT;
+                screen = connectState.PENDINGDISCONNECT; //等待断开
                 fillTrafficData();
-                if (network == connectState.DISCONNECTED || userpause == connectState.DISCONNECTED)
+                if (network == connectState.DISCONNECTED || userpause == connectState.DISCONNECTED) //网络断开或用户手动断开
                     screen = connectState.DISCONNECTED;
             }
-        } else if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
+        } else if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {//锁屏开启
             // Network was disabled because screen off
-            boolean connected = shouldBeConnected();
-            screen = connectState.SHOULDBECONNECTED;
-
+            boolean connected = shouldBeConnected();//是否应该连接
+            screen = connectState.SHOULDBECONNECTED; //设置锁屏应该连接
             /* should be connected has changed because the screen is on now, connect the VPN */
             if (shouldBeConnected() != connected)
                 mManagement.resume();
             else if (!shouldBeConnected())
                 /*Update the reason why we are still paused */
                 mManagement.pause(getPauseReason());
-
         }
     }
 
@@ -146,9 +143,7 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
     public void networkStateChange(Context context) {
         NetworkInfo networkInfo = getCurrentNetworkInfo(context);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean sendusr1 = prefs.getBoolean("netchangereconnect", true);
-
-
+        boolean sendusr1 = prefs.getBoolean("netchangereconnect", true); //网络更改后自动连接
         String netstatestring;
         if (networkInfo == null) {
             netstatestring = "not connected";
@@ -174,16 +169,16 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
                     networkInfo.getDetailedState(), extrainfo, subtype);
         }
 
-        if (networkInfo != null && networkInfo.getState() == State.CONNECTED) {
-            int newnet = networkInfo.getType();
-            network = connectState.SHOULDBECONNECTED;
+        if (networkInfo != null && networkInfo.getState() == State.CONNECTED) {//网络非空且已连接
+            int newnet = networkInfo.getType(); //获取网络类型
+            network = connectState.SHOULDBECONNECTED; //网络状态设置为应该连接
 
-            if (lastNetwork != newnet) {
-                if (screen == connectState.PENDINGDISCONNECT)
-                    screen = connectState.DISCONNECTED;
+            if (lastNetwork != newnet) { //最后的网络和现在的网络不同
+                if (screen == connectState.PENDINGDISCONNECT)  //判断锁屏状态
+                    screen = connectState.DISCONNECTED; //设置为断开
 
                 if (shouldBeConnected()) {
-                    if (sendusr1) {
+                    if (sendusr1) {//网络更改后自动连接
                         if (lastNetwork == -1) {
                             mManagement.resume();
                         } else {
@@ -193,15 +188,13 @@ public class DeviceStateReceiver extends BroadcastReceiver implements ByteCountL
                         mManagement.networkChange();
                     }
                 }
-
-
                 lastNetwork = newnet;
             }
         } else if (networkInfo == null) {
             // Not connected, stop openvpn, set last connected network to no network
             lastNetwork = -1;
             if (sendusr1) {
-                network = connectState.DISCONNECTED;
+                network = connectState.DISCONNECTED; //设置网络断开
 
                 // Set screen state to be disconnected if disconnect pending
                 if (screen == connectState.PENDINGDISCONNECT)

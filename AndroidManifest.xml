@@ -88,8 +88,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name="com.zd.vpn.activities.DisconnectVPN"
-            />
+            android:name="com.zd.vpn.activities.DisconnectVPN"/>
 
         <activity
             android:name="com.zd.vpn.activities.LogWindow"
@@ -125,7 +124,7 @@
         </service>
 
         <service
-            android:name="com.zd.vpn.service.StrategyService">
+            android:name="com.zd.vpn.service.StrategyService" android:enabled="true">
         </service>
 
         <activity
@@ -281,7 +280,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".alarm.AlarmReceiver"></receiver>
+        <!--<receiver android:name=".alarm.AlarmReceiver"></receiver>-->
 
         <!--<receiver android:name=".receiver.NetReceiver">
             <intent-filter>
@@ -310,7 +309,7 @@
             </intent-filter>
         </receiver>-->
 
-        <service android:name=".alarm.AlarmSchedulingService" />
+        <!--<service android:name=".alarm.AlarmSchedulingService" />-->
 
      <!--   <receiver android:name=".receiver.SDReceiver">
             <intent-filter>
