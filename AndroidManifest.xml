@@ -95,7 +95,9 @@
             android:allowTaskReparenting="true"
             android:label="@string/openvpn_log"
             android:launchMode="singleTask" />
+
         <activity android:name="com.zd.vpn.activities.FileSelect" />
+
         <!--<activity
             android:name=".activities.MainActivity"
             android:uiOptions="splitActionBarWhenNarrow"
@@ -115,6 +117,7 @@
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
+
         <service
             android:name="com.zd.vpn.api.ExternalOpenVPNService"
             android:permission="com.zd.vpn.REMOTE_API">
@@ -124,7 +127,8 @@
         </service>
 
         <service
-            android:name="com.zd.vpn.service.StrategyService" android:enabled="true">
+            android:name="com.zd.vpn.service.StrategyService"
+            android:enabled="true">
         </service>
 
         <activity
@@ -134,6 +138,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.zd.vpn.api.ConfirmDialog"
             android:permission="com.zd.vpn.REMOTE_API">
@@ -155,18 +160,14 @@
             tools:ignore="ExportedActivity">
             <intent-filter android:label="@string/import_config">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:mimeType="application/x-openvpn-profile" />
             </intent-filter>
             <intent-filter android:label="@string/import_config">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:mimeType="application/ovpn" />
             </intent-filter>
             <intent-filter android:label="@string/import_config">
@@ -188,6 +189,7 @@
                 <data android:pathPattern=".*.ovpn" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.zd.vpn.LaunchVPN"
             android:excludeFromRecents="true"
@@ -195,11 +197,9 @@
             tools:ignore="ExportedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
 
         <activity
             android:name="com.zd.vpn.activities.CreateShortcuts"
@@ -232,20 +232,18 @@
             android:label="@string/basic">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <activity android:name="com.zd.vpn.ui.GeneralSettingsActivity"></activity>
-
+        <activity android:name="com.zd.vpn.ui.GeneralSettingsActivity">
+        </activity>
 
         <activity
             android:name="com.zd.vpn.ui.ShowCertActivity"
             android:label="@string/show_certification_text">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -255,7 +253,6 @@
             android:label="@string/show_certification_text">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -265,16 +262,13 @@
             android:label="@string/about">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-
         <activity android:name="com.zd.vpn.ui.MoreActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

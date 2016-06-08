@@ -193,8 +193,8 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
 //        setBluetoothEnable(false);
 //        alarmReceiver.setAlarm(this);
 
-        Intent service = new Intent(this, StrategyService.class);
-        startService(service);
+      /*  Intent service = new Intent(this, StrategyService.class);
+        startService(service);*/
 //        Log.i("TAG", "开机自启动策略更新服务.....");
     }
 
