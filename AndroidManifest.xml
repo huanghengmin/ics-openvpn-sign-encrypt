@@ -61,10 +61,10 @@
 
     <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"></uses-permission>
 
-    <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
-    <uses-permission android:name="android.permission.SET_PREFERRED_APPLICATIONS"/>
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.SET_PREFERRED_APPLICATIONS" />
 
     <!-- Copy the <permission> block to your app when using the REMOTE API. Otherwise OpenVPN for
         Android needs to be installed first -->
@@ -87,8 +87,7 @@
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
 
-        <activity
-            android:name="com.zd.vpn.activities.DisconnectVPN"/>
+        <activity android:name="com.zd.vpn.activities.DisconnectVPN" />
 
         <activity
             android:name="com.zd.vpn.activities.LogWindow"
@@ -128,8 +127,7 @@
 
         <service
             android:name="com.zd.vpn.service.StrategyService"
-            android:enabled="true">
-        </service>
+            android:enabled="true"></service>
 
         <activity
             android:name="com.zd.vpn.api.GrantPermissionsActivity"
@@ -160,14 +158,18 @@
             tools:ignore="ExportedActivity">
             <intent-filter android:label="@string/import_config">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:mimeType="application/x-openvpn-profile" />
             </intent-filter>
             <intent-filter android:label="@string/import_config">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:mimeType="application/ovpn" />
             </intent-filter>
             <intent-filter android:label="@string/import_config">
@@ -204,8 +206,7 @@
         <activity
             android:name="com.zd.vpn.activities.CreateShortcuts"
             android:excludeFromRecents="true"
-            android:label="@string/vpn_shortcut"
-            >
+            android:label="@string/vpn_shortcut">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -236,8 +237,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.zd.vpn.ui.GeneralSettingsActivity">
-        </activity>
+        <activity android:name="com.zd.vpn.ui.GeneralSettingsActivity"></activity>
 
         <activity
             android:name="com.zd.vpn.ui.ShowCertActivity"
@@ -269,6 +269,7 @@
         <activity android:name="com.zd.vpn.ui.MoreActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -289,15 +290,15 @@
              </intent-filter>
          </receiver>-->
 
-          <!-- <receiver android:name=".receiver.WifiReceiver">
-               <intent-filter>
-                   &lt;!&ndash;<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />&ndash;&gt;
-                   <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-                   &lt;!&ndash;<action android:name="android.net.wifi.STATE_CHANGE" />&ndash;&gt;
-               </intent-filter>
-           </receiver>
+       <!-- <receiver android:name=".receiver.WifiReceiver">
+            <intent-filter>
+                &lt;!&ndash;<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />&ndash;&gt;
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                &lt;!&ndash;<action android:name="android.net.wifi.STATE_CHANGE" />&ndash;&gt;
+            </intent-filter>
+        </receiver>-->
 
-        <receiver android:name=".receiver.BluetoothReceiver">
+       <!-- <receiver android:name=".receiver.BluetoothReceiver">
             <intent-filter>
                 <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
             </intent-filter>
@@ -305,16 +306,16 @@
 
         <!--<service android:name=".alarm.AlarmSchedulingService" />-->
 
-     <!--   <receiver android:name=".receiver.SDReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
-                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
-                <action android:name="android.intent.action.MEDIA_REMOVED" />
-                <action android:name="android.intent.action.MEDIA_EJECT" />
-                <data android:scheme="file" />
-            </intent-filter>
-        </receiver>-->
+        <!--   <receiver android:name=".receiver.SDReceiver">
+               <intent-filter>
+                   <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                   <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                   <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
+                   <action android:name="android.intent.action.MEDIA_REMOVED" />
+                   <action android:name="android.intent.action.MEDIA_EJECT" />
+                   <data android:scheme="file" />
+               </intent-filter>
+           </receiver>-->
 
     </application>
 

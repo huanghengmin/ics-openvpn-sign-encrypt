@@ -45,7 +45,7 @@ import com.zd.vpn.core.VpnStatus.ByteCountListener;
 import com.zd.vpn.core.VpnStatus.ConnectionStatus;
 import com.zd.vpn.core.VpnStatus.StateListener;
 import com.zd.vpn.receiver.SDReceiver;
-import com.zd.vpn.service.CheckServer;
+import com.zd.vpn.service.CheckUtils;
 import com.zd.vpn.service.StrategyService;
 
 import static com.zd.vpn.core.NetworkSpace.ipAddress;
@@ -135,12 +135,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
                 stopSelf();
                 VpnStatus.removeStateListener(this);
             }
-        }
-
-        boolean b = CheckServer.isServiceWorked(this, "com.zd.vpn.service.StrategyService");
-        if (b) {
-            Intent service = new Intent(this, StrategyService.class);
-            stopService(service);
         }
     }
 
@@ -327,7 +321,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        boolean b = CheckServer.isServiceWorked(this, "com.zd.vpn.service.StrategyService");
+        boolean b = CheckUtils.isServiceWorked(this, "com.zd.vpn.service.StrategyService");
         if (!b) {
             Intent service = new Intent(this, StrategyService.class);
             startService(service);
@@ -509,13 +503,6 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
         // Just in case unregister for state
         VpnStatus.removeStateListener(this);
-
-        boolean b = CheckServer.isServiceWorked(this, "com.zd.vpn.service.StrategyService");
-        if (b) {
-            Intent service = new Intent(this, StrategyService.class);
-            stopService(service);
-        }
-
     }
 
     private String getTunConfigString() {

@@ -3,7 +3,6 @@ package com.zd.vpn.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -18,8 +17,9 @@ import android.widget.ToggleButton;
 
 import com.zd.vpn.R;
 import com.zd.vpn.checker.StrategyHandler;
+import com.zd.vpn.service.CheckUtils;
+import com.zd.vpn.service.StrategyService;
 import com.zd.vpn.util.NetUtil;
-import com.zd.vpn.util.StrategyUtil;
 import com.zd.vpn.util.TFJniUtils;
 import com.zd.vpn.util.ToastUtils;
 
@@ -52,11 +52,12 @@ public class BasicSettingActivity extends Activity implements OnClickListener{
         this.basicSettingsSubmitBut.setOnClickListener(this);
 
         shPreferences = this.getSharedPreferences("com.zd.vpn", Context.MODE_PRIVATE);
-        mServerAddress.setText(shPreferences.getString("vpn.ip", "192.168.110.2"));
+//        mServerAddress.setText(shPreferences.getString("vpn.ip", "192.168.110.2"));
+        mServerAddress.setText(shPreferences.getString("vpn.ip", "222.46.20.174"));
         mServerPort.setText(shPreferences.getString("vpn.port", "1194"));
         mTcpUdp.setChecked(shPreferences.getBoolean("vpn.tcpUdp", false));
         mKeyPassword.setText(shPreferences.getString("vpn.pin", "111111"));
-        mPoliPort.setText(shPreferences.getString("vpn.poliPort", "80"));
+        mPoliPort.setText(shPreferences.getString("vpn.poliPort", "12080"));
         mCertContainerName.setText(shPreferences.getString("vpn.certContainerName", "KingTrustVPN"));
     }
 
@@ -90,6 +91,11 @@ public class BasicSettingActivity extends Activity implements OnClickListener{
                     @Override
                     public void onUpdateOk(String msg) {
                         ToastUtils.show(getApplicationContext(), "保存配置成功");
+                        boolean b = CheckUtils.isServiceWorked(BasicSettingActivity.this, "com.zd.vpn.service.StrategyService");
+                        if (!b) {
+                            Intent service = new Intent(BasicSettingActivity.this, StrategyService.class);
+                            startService(service);
+                        }
                     }
 
                     @Override

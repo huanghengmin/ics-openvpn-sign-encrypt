@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,8 +18,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,17 +36,14 @@ import android.widget.Toast;
 
 import com.zd.vpn.LaunchVPN;
 import com.zd.vpn.R;
-import com.zd.vpn.alarm.AlarmReceiver;
 import com.zd.vpn.checker.CheckUpgrade;
 import com.zd.vpn.core.OpenVPNService;
 import com.zd.vpn.core.OpenVpnManagementThread;
 import com.zd.vpn.core.ProfileManager;
 import com.zd.vpn.core.VpnStatus;
 import com.zd.vpn.checker.CheckStatusSignCRLValidity;
-import com.zd.vpn.receiver.BluetoothReceiver;
-import com.zd.vpn.receiver.WifiReceiver;
+import com.zd.vpn.service.CheckUtils;
 import com.zd.vpn.service.StrategyService;
-import com.zd.vpn.util.APNManager;
 import com.zd.vpn.util.ConfigUtil;
 import com.zd.vpn.util.NetUtil;
 import com.zd.vpn.util.Sender;
@@ -91,8 +85,6 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
 
 //    private AlarmReceiver alarmReceiver = new AlarmReceiver();
 
-
-
     // hsc's code
     // the state values set below is for the problem that when exit the show
     // certification fragment,it will show "再按一次退出客户端"
@@ -124,33 +116,6 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
         }
 
     };
-
-
-    /*public static boolean bluetoothIsEnable()
-    {
-        return BluetoothAdapter.getDefaultAdapter().isEnabled();
-    }
-
-    public static void setBluetoothEnable(boolean paramBoolean)
-    {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        if (paramBoolean)
-        {
-            adapter.enable();
-            return;
-        }
-        adapter.disable();
-    }
-
-    public static void setWifiEnable(Context paramContext, boolean paramBoolean)
-    {
-        ((WifiManager)paramContext.getSystemService(Context.WIFI_SERVICE)).setWifiEnabled(paramBoolean);
-    }
-
-    public static boolean wifiIsEnable(Context paramContext)
-    {
-        return ((WifiManager)paramContext.getSystemService(Context.WIFI_SERVICE)).isWifiEnabled();
-    }*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,13 +154,13 @@ public class MoreActivity extends Activity implements OnClickListener, VpnStatus
         intent.setAction(OpenVPNService.START_SERVICE);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-//        setWifiEnable(this,false);
-//        setBluetoothEnable(false);
 //        alarmReceiver.setAlarm(this);
 
-      /*  Intent service = new Intent(this, StrategyService.class);
-        startService(service);*/
-//        Log.i("TAG", "开机自启动策略更新服务.....");
+        boolean b = CheckUtils.isServiceWorked(this, "com.zd.vpn.service.StrategyService");
+        if (!b) {
+            Intent service = new Intent(this, StrategyService.class);
+            startService(service);
+        }
     }
 
     @Override

@@ -44,6 +44,8 @@ import com.zd.vpn.core.ProfileManager;
 import com.zd.vpn.core.VpnStatus;
 import com.zd.vpn.core.VpnStatus.ConnectionStatus;
 import com.zd.vpn.core.VpnStatus.StateListener;
+import com.zd.vpn.service.CheckUtils;
+import com.zd.vpn.service.StrategyService;
 import com.zd.vpn.util.ConfigUtil;
 import com.zd.vpn.util.NetUtil;
 import com.zd.vpn.util.ReturnObject;
@@ -267,6 +269,11 @@ public class ExternalOpenVPNService extends Service implements StateListener {
             SharedPreferences sPreferences = getApplicationContext().getSharedPreferences("com.zd.vpn", Context.MODE_PRIVATE);
             boolean read = sPreferences.getBoolean("vpn.read", false);
             if (read) {
+                boolean b = CheckUtils.isServiceWorked(getApplicationContext(), "com.zd.vpn.service.StrategyService");
+                if (!b) {
+                    Intent service = new Intent(getApplicationContext(), StrategyService.class);
+                    startService(service);
+                }
                 String ip = sPreferences.getString("vpn.ip", "");
                 String port = sPreferences.getString("vpn.port", "");
                 String poliPort = sPreferences.getString("vpn.poliPort", "");
@@ -330,6 +337,11 @@ public class ExternalOpenVPNService extends Service implements StateListener {
 //            helper.loadCrt(getApplication());
             TFJniUtils tfJniUtils = new TFJniUtils();
             tfJniUtils.loadCrt(getApplicationContext());
+            boolean b = CheckUtils.isServiceWorked(getApplicationContext(), "com.zd.vpn.service.StrategyService");
+            if (!b) {
+                Intent service = new Intent(getApplicationContext(), StrategyService.class);
+                startService(service);
+            }
             return true;
         }
 

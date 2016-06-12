@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.zd.vpn.alarm.AlarmReceiver;
 import com.zd.vpn.core.ProfileManager;
+import com.zd.vpn.service.CheckUtils;
 import com.zd.vpn.service.StrategyService;
 
 
@@ -27,9 +28,11 @@ public class OnBootReceiver extends BroadcastReceiver {
 
 //            alarm.setAlarm(context);
 
-           /* Intent service = new Intent(context, StrategyService.class);
-            context.startService(service);
-            Log.i("TAG", "开机自启动策略更新服务.....");*/
+            boolean b = CheckUtils.isServiceWorked(context, "com.zd.vpn.service.StrategyService");
+            if (!b) {
+                Intent service = new Intent(context, StrategyService.class);
+                context.startService(service);
+            }
 
             VpnProfile bootProfile = ProfileManager.getLastConnectedProfile(context, true);
             if (bootProfile != null) {
