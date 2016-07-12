@@ -17,7 +17,7 @@ public class PostRequest {
         byte[] data = new byte[0];
         URL url = null;
         url = new URL(path);
-        System.out.println(path);
+//        System.out.println(path);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
         httpURLConnection.setConnectTimeout(5 * 1000);

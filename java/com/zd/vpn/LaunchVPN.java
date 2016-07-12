@@ -24,7 +24,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.security.cert.X509Certificate;
 
 import com.zd.vpn.activities.LogWindow;
 import com.zd.vpn.core.ProfileManager;
@@ -33,6 +39,7 @@ import com.zd.vpn.core.VpnStatus;
 import com.zd.vpn.core.VpnStatus.ConnectionStatus;
 
 import com.zd.vpn.R;
+import com.zd.vpn.core.X509Utils;
 
 /**
  * This Activity actually handles two stages of a launcher shortcut's life cycle.
@@ -112,11 +119,11 @@ public class LaunchVPN extends Activity {
 			}
 
 			mSelectedProfile = profileToConnect;
-            Log.i("vpn", "mCaFilename:" + mSelectedProfile.mCaFilename);
-            Log.i("vpn", "mClientCertFilename:"
-                    + mSelectedProfile.mClientCertFilename);
-            Log.i("vpn", "mKeyPassword:" + mSelectedProfile.mKeyPassword);
-            System.out.println("start launchVPN");
+//            Log.i("vpn", "mCaFilename:" + mSelectedProfile.mCaFilename);
+//            Log.i("vpn", "mClientCertFilename:"
+//                    + mSelectedProfile.mClientCertFilename);
+//            Log.i("vpn", "mKeyPassword:" + mSelectedProfile.mKeyPassword);
+//            System.out.println("start launchVPN");
 			launchVPN();
 
 		}
@@ -155,28 +162,28 @@ public class LaunchVPN extends Activity {
         }
 
         AlertDialog.Builder builder = dialog.setPositiveButton(android.R.string.ok,
-                new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+				new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
 
-                        if (type == R.string.password) {
-                            mSelectedProfile.mUsername = ((EditText) userpwlayout.findViewById(R.id.username)).getText().toString();
+						if (type == R.string.password) {
+							mSelectedProfile.mUsername = ((EditText) userpwlayout.findViewById(R.id.username)).getText().toString();
 
-                            String pw = ((EditText) userpwlayout.findViewById(R.id.password)).getText().toString();
-                            if (((CheckBox) userpwlayout.findViewById(R.id.save_password)).isChecked()) {
-                                 mSelectedProfile.mPassword=pw;
-                            } else {
-                                mSelectedProfile.mPassword=null;
-                                mSelectedProfile.mTransientPW = pw;
-                            }
-                        } else {
-                            mSelectedProfile.mTransientPCKS12PW = entry.getText().toString();
-                        }
-                        onActivityResult(START_VPN_PROFILE, Activity.RESULT_OK, null);
+							String pw = ((EditText) userpwlayout.findViewById(R.id.password)).getText().toString();
+							if (((CheckBox) userpwlayout.findViewById(R.id.save_password)).isChecked()) {
+								mSelectedProfile.mPassword = pw;
+							} else {
+								mSelectedProfile.mPassword = null;
+								mSelectedProfile.mTransientPW = pw;
+							}
+						} else {
+							mSelectedProfile.mTransientPCKS12PW = entry.getText().toString();
+						}
+						onActivityResult(START_VPN_PROFILE, Activity.RESULT_OK, null);
 
-                    }
+					}
 
-                });
+				});
         dialog.setNegativeButton(android.R.string.cancel,
 				new DialogInterface.OnClickListener() {
 			@Override
@@ -242,11 +249,47 @@ public class LaunchVPN extends Activity {
 		d.show();
 	}
 
+	void showCheckValidityErrorDialog(int msg) {
+		AlertDialog.Builder d = new AlertDialog.Builder(this);
+		d.setTitle(R.string.check_validity_error_found);
+		d.setMessage(msg);
+		d.setPositiveButton(android.R.string.ok, new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+			}
+		});
+		d.show();
+	}
+
 	void launchVPN () {
 		int vpnok = mSelectedProfile.checkProfile(this);
 		if(vpnok!= R.string.no_error_found) {
 			showConfigErrorDialog(vpnok);
 			return;
+		}
+
+		if (!TextUtils.isEmpty(mSelectedProfile.mCaFilename)) {
+			try {
+				Certificate cacert = X509Utils.getCertificateFromFile(mSelectedProfile.mCaFilename);
+				((X509Certificate)cacert).checkValidity();
+			} catch (CertificateExpiredException e) {
+				showConfigErrorDialog(R.string.check_validity_error_cert);
+				Log.i("vpn", "vpn check validity contains error");
+				return;
+			} catch (CertificateNotYetValidException e) {
+				showCheckValidityErrorDialog(R.string.check_validity_error_found);
+				Log.i("vpn", "vpn check validity contains error");
+				return;
+			}catch (FileNotFoundException e) {
+				showConfigErrorDialog(R.string.check_validity_error_cert);
+				Log.i("vpn", "vpn check validity contains error");
+				return;
+			} catch (CertificateException e) {
+				showCheckValidityErrorDialog(R.string.check_validity_error_found);
+				Log.i("vpn", "vpn check validity contains error");
+				return;
+			}
 		}
 
 		Intent intent = VpnService.prepare(this);
@@ -269,7 +312,7 @@ public class LaunchVPN extends Activity {
                     ConnectionStatus.LEVEL_WAITING_FOR_USER_INPUT);
 			// Start the query
 			try {
-                System.out.println("startActivityForResult");
+//                System.out.println("startActivityForResult");
 				startActivityForResult(intent, START_VPN_PROFILE);
 			} catch (ActivityNotFoundException ane) {
 				// Shame on you Sony! At least one user reported that 
@@ -278,7 +321,7 @@ public class LaunchVPN extends Activity {
 //				showLogWindow();
 			}
 		} else {
-            System.out.println("onActivityResult");
+//            System.out.println("onActivityResult");
 			onActivityResult(START_VPN_PROFILE, Activity.RESULT_OK, null);
 		}
 
