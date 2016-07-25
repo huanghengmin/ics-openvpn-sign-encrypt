@@ -333,8 +333,8 @@
     <string name="settings_more">更多设置</string>
     <string name="product_name">产品名称：安全接入网关客户端</string>
     <string name="copyright">版权所有：北京中盾安全技术开发有限公司</string>
-    <string name="version_value">版本号：V2.6.0.26020160613</string>
-    <string name="version">V2.6.0.26020160613</string>
+    <string name="version_value">版本号：V2.6.0.26020160714</string>
+    <string name="version">V2.6.0.26020160714</string>
     <string name="no_process">未运行</string>
 
     <string name="permission_icon_app">Icon of app trying to use OpenVPN for Android</string>

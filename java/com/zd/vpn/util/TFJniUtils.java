@@ -23,7 +23,7 @@ public class TFJniUtils {
 
     public String getPath(Context context) {
         context.getExternalCacheDir().toString();
-        String sdPath = ConfigPathUtil.getSDPath();
+        String sdPath = ConfigPathUtil.getSDPath(context);
         if (sdPath != null) {
             if (Build.VERSION.SDK_INT >= 19) {
                 return sdPath + "/Android/data/" + context.getPackageName();
