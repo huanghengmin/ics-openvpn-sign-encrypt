@@ -48,6 +48,7 @@ import com.zd.vpn.service.CheckUtils;
 import com.zd.vpn.service.StrategyService;
 import com.zd.vpn.util.ConfigUtil;
 import com.zd.vpn.util.NetUtil;
+import com.zd.vpn.util.ReturnCode;
 import com.zd.vpn.util.ReturnObject;
 import com.zd.vpn.util.TFJniUtils;
 import com.zd.vpn.util.TelInfoUtil;
@@ -116,7 +117,7 @@ public class ExternalOpenVPNService extends Service implements StateListener {
 
         @Override
         public List<APIVpnProfile> getProfiles() throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
 
             ProfileManager pm = ProfileManager.getInstance(getBaseContext());
 
@@ -173,7 +174,7 @@ public class ExternalOpenVPNService extends Service implements StateListener {
 
         @Override
         public boolean addVPNProfile(String name, String config) throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
 
             ConfigParser cp = new ConfigParser();
             try {
@@ -214,7 +215,7 @@ public class ExternalOpenVPNService extends Service implements StateListener {
 
         @Override
         public Intent prepareVPNService() throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
             if (VpnService.prepare(ExternalOpenVPNService.this) == null)
                 return null;
             else
@@ -224,7 +225,7 @@ public class ExternalOpenVPNService extends Service implements StateListener {
         @Override
         public void registerStatusCallback(IOpenVPNStatusCallback cb)
                 throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
 
             if (cb != null) {
                 cb.newStatus(mMostRecentState.vpnUUID, mMostRecentState.state, mMostRecentState.logmessage, mMostRecentState.level.name());
@@ -235,7 +236,7 @@ public class ExternalOpenVPNService extends Service implements StateListener {
         @Override
         public void unregisterStatusCallback(IOpenVPNStatusCallback cb)
                 throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
 
             if (cb != null)
                 mCallbacks.unregister(cb);
@@ -243,21 +244,21 @@ public class ExternalOpenVPNService extends Service implements StateListener {
 
         @Override
         public void disconnect() throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
             if (mService != null && mService.getManagement() != null)
                 mService.getManagement().stopVPN();
         }
 
         @Override
         public void pause() throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
             if (mService != null)
                 mService.userPause(true);
         }
 
         @Override
         public void resume() throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
             if (mService != null)
                 mService.userPause(false);
 
@@ -265,7 +266,7 @@ public class ExternalOpenVPNService extends Service implements StateListener {
 
         @Override
         public String startZDVPN() throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
             SharedPreferences sPreferences = getApplicationContext().getSharedPreferences("com.zd.vpn", Context.MODE_PRIVATE);
             boolean read = sPreferences.getBoolean("vpn.read", false);
             if (read) {
@@ -292,31 +293,35 @@ public class ExternalOpenVPNService extends Service implements StateListener {
                         intent.setAction(Intent.ACTION_MAIN);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        return object.getMsg();
+//                        return object.getMsg();
+                        return ReturnCode.RETURN_CLIENT_STATUS_SUCCESS;
                     } else {
-                        return returnObject.getMsg();
+//                        return returnObject.getMsg();
+                        return ReturnCode.RETURN_CLIENT_STATUS_SUCCESS;
                     }
                 } else {
-                    return returnObject.getMsg();
+//                    return returnObject.getMsg();
+                    return ReturnCode.RETURN_CLIENT_STATUS_ERROR;
                 }
+            }else {
+                return ReturnCode.RETURN_PLEASE_INIT_ERROR;
             }
-            return null;
         }
 
         @Override
         public void stopZDVPN() throws RemoteException {
-            checkOpenVPNPermission();
+//            checkOpenVPNPermission();
             if (mService != null && mService.getManagement() != null)
                 mService.getManagement().stopVPN();
         }
 
         @Override
         public boolean init(String ip, int port, int strategyPort, String pinCode, String container, boolean tcpudp) {
-            try {
+            /*try {
                 checkOpenVPNPermission();
             } catch (SecurityRemoteException e) {
                 e.printStackTrace();
-            }
+            }*/
             // 判断网络
             if (!NetUtil.isNetworkConnected(getApplicationContext())) {
                 Toast.makeText(getApplicationContext(), "请先设置网络连接！", Toast.LENGTH_LONG).show();
@@ -347,11 +352,11 @@ public class ExternalOpenVPNService extends Service implements StateListener {
 
         @Override
         public String[] loadCert() {
-            try {
+            /*try {
                 checkOpenVPNPermission();
             } catch (SecurityRemoteException e) {
                 e.printStackTrace();
-            }
+            }*/
             SharedPreferences sPreferences = getApplicationContext().getSharedPreferences("com.zd.vpn", Context.MODE_PRIVATE);
             boolean read = sPreferences.getBoolean("vpn.read", false);
             TFJniUtils tfJniUtils = new TFJniUtils();

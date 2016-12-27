@@ -68,12 +68,12 @@
 
     <!-- Copy the <permission> block to your app when using the REMOTE API. Otherwise OpenVPN for
         Android needs to be installed first -->
-    <permission
+   <!-- <permission
         android:name="com.zd.vpn.REMOTE_API"
         android:description="@string/permission_description"
         android:label="Control VPN"
         android:permissionGroup="android.permission-group.NETWORK"
-        android:protectionLevel="dangerous" />
+        android:protectionLevel="dangerous" />-->
 
     <application
         android:name="com.zd.vpn.core.ICSOpenVPNApplication"
@@ -118,8 +118,8 @@
         </service>
 
         <service
-            android:name="com.zd.vpn.api.ExternalOpenVPNService"
-            android:permission="com.zd.vpn.REMOTE_API">
+            android:name="com.zd.vpn.api.ExternalOpenVPNService">
+            <!--android:permission="com.zd.vpn.REMOTE_API"-->
             <intent-filter>
                 <action android:name="com.zd.vpn.api.IOpenVPNAPIService" />
             </intent-filter>
@@ -130,16 +130,16 @@
             android:enabled="true"></service>
 
         <activity
-            android:name="com.zd.vpn.api.GrantPermissionsActivity"
-            android:permission="com.zd.vpn.REMOTE_API">
+            android:name="com.zd.vpn.api.GrantPermissionsActivity">
+            <!--android:permission="com.zd.vpn.REMOTE_API"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.zd.vpn.api.ConfirmDialog"
-            android:permission="com.zd.vpn.REMOTE_API">
+            android:name="com.zd.vpn.api.ConfirmDialog">
+            <!--android:permission="com.zd.vpn.REMOTE_API"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
